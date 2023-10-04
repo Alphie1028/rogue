@@ -1,20 +1,16 @@
 import './App.css'
+import React from 'react';
 import Player from './components/Player'
 import Wall from './components/Wall'
+import { generateMapWithSpawn } from './components/mapGenerator';
 
 function App() {
 
-  const walls = [
-    { x: 3, y: 3 },
-    { x: 4, y: 3 },
-    { x: 5, y: 3 },
-    { x: 3, y: 5 },
-    { x: 3, y: 6 },
-  ];
+  const { map: walls, spawnPoint } = generateMapWithSpawn();
 
   return (
     <div className="gameContainer">
-      <Player walls={walls}></Player>
+      <Player walls={walls} spawn={spawnPoint}></Player>
       {walls.map((wall, idx) => <Wall key={idx} x={wall.x} y={wall.y} />)}
     </div>  
   )

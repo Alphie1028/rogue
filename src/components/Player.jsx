@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-function Player({walls}) {
+function Player({walls,spawn}) {
     const WIDTH = 20;  // width in player units
     const HEIGHT = 20;  // height in player units
 
     const centerX = Math.floor(WIDTH / 2);
     const centerY = Math.floor(HEIGHT / 2);
 
-    const [playerPosition, setPlayerPosition] = useState({ x: centerX, y: centerY });
+    const [playerPosition, setPlayerPosition] = useState(spawn || { x: centerX, y: centerY }); // Use spawn as initial position if provided
 
     const handleKeyPress = (e) => {
         let newX = playerPosition.x;

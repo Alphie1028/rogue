@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-function Player() {
+function Player({walls}) {
     const WIDTH = 20;  // width in player units
     const HEIGHT = 20;  // height in player units
 
@@ -15,22 +15,26 @@ function Player() {
 
         switch (e.key) {
             case 'w':
-                newY = Math.max(0, playerPosition.y - 1);
+                newY = Math.max(0, newY - 1);
                 break;
             case 's':
-                newY = Math.min(HEIGHT - 1, playerPosition.y + 1);
+                newY = Math.min(HEIGHT - 1, newY + 1);
                 break;
             case 'a':
-                newX = Math.max(0, playerPosition.x - 1);
+                newX = Math.max(0, newX - 1);
                 break;
             case 'd':
-                newX = Math.min(WIDTH - 1, playerPosition.x + 1);
+                newX = Math.min(WIDTH - 1, newX + 1);
                 break;
             default:
                 break;
         }
 
-        setPlayerPosition({ x: newX, y: newY });
+        // Check against walls
+        const hitsWall = walls && walls.some(wall => wall.x === newX && wall.y === newY);
+        if (!hitsWall) {
+            setPlayerPosition({ x: newX, y: newY });
+        }
     };
 
     useEffect(() => {

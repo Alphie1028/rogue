@@ -1,0 +1,29 @@
+body,
+html {
+  height: 100%;
+  margin: 0;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f4f4;
+  /* Optional: you can use any background color */
+}
+
+.gameContainer {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  border: 1px solid black;
+}
+
+.player {
+  position: absolute;
+  top: 0;
+  /* Added */
+  left: 0;
+  /* Added */
+  width: 16px;
+  height: 16px;
+  background-color: blue;
+}

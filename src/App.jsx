@@ -1,11 +1,11 @@
 import './App.css'
-
+import Player from './components/Player'
 function App() {
 
   return (
-    <>
-      <h1>Cleaning up</h1>
-    </>
+    <div className="gameContainer">
+      <Player></Player>
+    </div>  
   )
 }
 

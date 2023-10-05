@@ -11,9 +11,8 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory})
     
 
     const handleKeyPress = (e) => {
-        setPlayerPosition(prevPosition => {
-            let newX = prevPosition.x;
-            let newY = prevPosition.y;
+        let newX = playerPosition.x;
+        let newY = playerPosition.y;
 
             switch (e.key) {
                 case 'w':
@@ -29,22 +28,20 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory})
                     newX = Math.min(WIDTH - 1, newX + 1);
                     break;
                 default:
-                    return prevPosition;  // Return previous state if no movement key pressed
+                    break;
             }
 
-            // Check against walls
-            const hitsWall = walls && walls.some(wall => wall.x === newX && wall.y === newY);
-            if (hitsWall) {
-                return prevPosition;  // Return previous state if hits wall
-            }
+        const hitsWall = walls && walls.some(wall => wall.x === newX && wall.y === newY);
 
+        if (!hitsWall) {
+            setPlayerPosition({ x: newX, y: newY });
+
+            // If the player is on top of the key, add the key to the inventory and remove the key from the board
             if (newX === keyPosition.x && newY === keyPosition.y) {
                 setInventory(prevInventory => [...prevInventory, "key"]);
                 setKeyPosition({ x: -1, y: -1 });
             }
-
-            return { x: newX, y: newY };
-        });
+        }
     };
 
     useEffect(() => {
@@ -52,7 +49,7 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory})
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
         };
-    }, []);
+    }, [playerPosition, keyPosition, walls, inventory]);
 
     return (
         <div

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-function Player({walls,spawn,keyPosition,setKeyPosition}) {
+function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory}) {
     const WIDTH = 20;  // width in player units
     const HEIGHT = 20;  // height in player units
 
@@ -8,7 +8,7 @@ function Player({walls,spawn,keyPosition,setKeyPosition}) {
     const centerY = Math.floor(HEIGHT / 2);
 
     const [playerPosition, setPlayerPosition] = useState(spawn || { x: centerX, y: centerY }); // Use spawn as initial position if provided
-    const [inventory, setInventory] = useState([]);
+    
 
     const handleKeyPress = (e) => {
         setPlayerPosition(prevPosition => {

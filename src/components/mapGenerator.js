@@ -57,7 +57,8 @@ export function generateMap() {
 
     return mapArray;
 }
-export function generateMapWithSpawn() {
+
+export function generateMapWithSpawnAndKey() {
     const mapArray = generateMap();
 
     // Filter for open spaces on the board
@@ -74,5 +75,11 @@ export function generateMapWithSpawn() {
     const randomIndex = Math.floor(Math.random() * openSpaces.length);
     const spawnPoint = openSpaces[randomIndex];
 
-    return { map: mapArray, spawnPoint };
+    let keyPoint;
+    do {
+        const keyRandomIndex = Math.floor(Math.random() * openSpaces.length);
+        keyPoint = openSpaces[keyRandomIndex];
+    } while (Math.abs(keyPoint.x - spawnPoint.x) <= 3 && Math.abs(keyPoint.y - spawnPoint.y) <= 3) // Ensure the key isn't too close to the player
+
+    return { map: mapArray, spawnPoint, keyPoint };
 }

@@ -32,6 +32,7 @@ function App() {
         setInventory={setInventory}
         enemyPosition={enemyPosition}
         setPlayerHealth={setPlayerHealth}
+        setEnemyPosition={setEnemyPosition}
         ></Player>
         {walls.map((wall, idx) => <Wall key={`wall-${idx}`} x={wall.x} y={wall.y} />)}
         {keyPosition.x >= 0 && keyPosition.y >= 0 && <Key x={keyPosition.x} y={keyPosition.y} />}

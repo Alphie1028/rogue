@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,enemyPosition,setPlayerHealth}) {
+function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,enemyPosition,setPlayerHealth, setEnemyPosition}) {
     const WIDTH = 20;  // width in player units
     const HEIGHT = 20;  // height in player units
 
@@ -33,6 +33,8 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,e
 
         const hitsWall = walls && walls.some(wall => wall.x === newX && wall.y === newY);
         const hitsEnemy = enemyPosition.x === newX && enemyPosition.y === newY;
+        const newEnemyPosition = determineEnemyMove(enemyPosition, playerPosition, walls);
+        setEnemyPosition(newEnemyPosition);
 
         if (!hitsWall && !hitsEnemy) {
             setPlayerPosition({ x: newX, y: newY });
@@ -53,6 +55,37 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,e
         }
     };
 
+    const determineEnemyMove = (enemyPos, playerPos, walls) => {
+        const xDiff = enemyPos.x - playerPos.x;
+        const yDiff = enemyPos.y - playerPos.y;
+
+        let newEnemyPos = { ...enemyPos };  // Start with current enemy position
+
+        // If horizontal distance is greater or equal to vertical, try moving horizontally
+        if (Math.abs(xDiff) >= Math.abs(yDiff)) {
+            newEnemyPos.x = xDiff > 0 ? enemyPos.x - 1 : enemyPos.x + 1;
+            if (isBlocked(newEnemyPos, walls)) {
+                newEnemyPos.x = enemyPos.x;  // Reset x if blocked
+                newEnemyPos.y = yDiff > 0 ? enemyPos.y - 1 : enemyPos.y + 1;  // Try vertical move
+            }
+        } else {
+            newEnemyPos.y = yDiff > 0 ? enemyPos.y - 1 : enemyPos.y + 1;
+            if (isBlocked(newEnemyPos, walls)) {
+                newEnemyPos.y = enemyPos.y;  // Reset y if blocked
+                newEnemyPos.x = xDiff > 0 ? enemyPos.x - 1 : enemyPos.x + 1;  // Try horizontal move
+            }
+        }
+
+        if (isBlocked(newEnemyPos, walls)) {
+            return enemyPos;  // Return original position if both directions are blocked
+        }
+        return newEnemyPos;
+    };
+
+    const isBlocked = (position, walls) => {
+        return walls.some(wall => wall.x === position.x && wall.y === position.y);
+    };
+    
     useEffect(() => {
         window.addEventListener('keydown', handleKeyPress);
         return () => {

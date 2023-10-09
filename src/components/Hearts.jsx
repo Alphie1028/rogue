@@ -1,7 +1,7 @@
 import React from "react";
 
 function Hearts({playerHealth}){
-    const fullHearts = Math.floor(playerHealth / 100);
+    const fullHearts = Math.max(0, Math.min(3, Math.floor(playerHealth / 100)));
     const emptyHearts = 3 - fullHearts;
 
     return(

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,enemyPosition,setPlayerHealth, setEnemyPosition}) {
+function Player({ walls, spawn, keyPosition, setKeyPosition, inventory, setInventory, enemyPosition, setPlayerHealth, setEnemyPosition, portalPosition, resetGame}) {
     const WIDTH = 20;  // width in player units
     const HEIGHT = 20;  // height in player units
 
@@ -36,6 +36,7 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,e
         // Check for potential collisions for the player
         const hitsWall = walls && walls.some(wall => wall.x === newX && wall.y === newY);
         const hitsEnemy = newEnemyPosition.x === newX && newEnemyPosition.y === newY;
+        const entersPortal = newX === portalPosition.x && newY === portalPosition.y;
 
         if (!hitsWall && !hitsEnemy) {
             setPlayerPosition({ x: newX, y: newY });
@@ -53,6 +54,10 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,e
                 (newY === enemyPosition.y && Math.abs(newX - enemyPosition.x) === 1)
             ) {
                 setPlayerHealth(prevHealth => prevHealth - 100);
+            }
+
+            if (entersPortal) {
+                resetGame();
             }
         }
     };
@@ -96,7 +101,7 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,e
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
         };
-    }, [playerPosition, keyPosition, walls, inventory]);
+    }, [playerPosition, keyPosition, walls, inventory, enemyPosition, portalPosition]);
 
     useEffect(() => {
         const checkForEnemyContact = () => {

@@ -83,3 +83,10 @@ html {
   height: 16px;
   background-color: red;
 }
+
+.portal {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  transition: transform 0.15s;
+}

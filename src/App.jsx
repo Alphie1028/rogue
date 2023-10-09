@@ -7,6 +7,7 @@ import Inventory from './components/Inventory';
 import Hearts from './components/Hearts';
 import Enemy from './components/Enemy';
 import GameOver from './components/GameOver';
+import Portal from './components/Portal';
 import { generateMapWithSpawnAndKey } from './components/mapGenerator';
 
 function App() {
@@ -18,6 +19,16 @@ function App() {
   const [inventory, setInventory] = useState([]);
   const [playerHealth, setPlayerHealth] = useState(300);
   const [enemyPosition, setEnemyPosition] = useState(initialState.enemyPoint);
+  const [portalPosition, setPortalPosition] = useState(initialState.portalPoint); 
+
+  const resetGame = () => {
+    const newMap = generateMapWithSpawnAndKey();
+    setWalls(newMap.map);
+    setSpawnPoint(newMap.spawnPoint);
+    setKeyPosition(newMap.keyPoint);
+    setEnemyPosition(newMap.enemyPoint);
+    setPortalPosition(newMap.portalPoint);
+  };
 
   const restartGame = () => {
     // Reset the game state to the initial state
@@ -49,9 +60,13 @@ function App() {
         enemyPosition={enemyPosition}
         setPlayerHealth={setPlayerHealth}
         setEnemyPosition={setEnemyPosition}
+        portalPosition={portalPosition}
+        setPortalPosition={setPortalPosition}
+        resetGame={resetGame}
         ></Player>
         {walls.map((wall, idx) => <Wall key={`wall-${idx}`} x={wall.x} y={wall.y} />)}
         {keyPosition.x >= 0 && keyPosition.y >= 0 && <Key x={keyPosition.x} y={keyPosition.y} />}
+        <Portal x={portalPosition.x} y={portalPosition.y} />
         <Enemy x={enemyPosition.x} y={enemyPosition.y} />
       </div>
     </div>

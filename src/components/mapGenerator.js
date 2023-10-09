@@ -89,7 +89,16 @@ export function generateMapWithSpawnAndKey() {
         (Math.abs(enemyPoint.x - spawnPoint.x) <= 3 && Math.abs(enemyPoint.y - spawnPoint.y) <= 3) ||
         (Math.abs(enemyPoint.x - keyPoint.x) <= 3 && Math.abs(enemyPoint.y - keyPoint.y) <= 3)
     );
+    
+    let portalPoint;
+    do {
+        const portalRandomIndex = Math.floor(Math.random() * openSpaces.length);
+        portalPoint = openSpaces[portalRandomIndex];
+    } while (
+        (Math.abs(portalPoint.x - spawnPoint.x) <= 3 && Math.abs(portalPoint.y - spawnPoint.y) <= 3) ||
+        (Math.abs(portalPoint.x - keyPoint.x) <= 3 && Math.abs(portalPoint.y - keyPoint.y) <= 3) ||
+        (Math.abs(portalPoint.x - enemyPoint.x) <= 3 && Math.abs(portalPoint.y - enemyPoint.y) <= 3)
+    );
 
-
-    return { map: mapArray, spawnPoint, keyPoint, enemyPoint };
+    return { map: mapArray, spawnPoint, keyPoint, enemyPoint, portalPoint };
 }

@@ -60,6 +60,22 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,e
         };
     }, [playerPosition, keyPosition, walls, inventory]);
 
+    useEffect(() => {
+        const checkForEnemyContact = () => {
+            if (
+                (playerPosition.x === enemyPosition.x && Math.abs(playerPosition.y - enemyPosition.y) === 1) ||
+                (playerPosition.y === enemyPosition.y && Math.abs(playerPosition.x - enemyPosition.x) === 1)
+            ) {
+                setPlayerHealth(prevHealth => prevHealth - 100);
+            }
+        };
+        const intervalId = setInterval(checkForEnemyContact, 1000); // Check every 10 seconds
+
+        return () => {
+            clearInterval(intervalId); // Clear the interval when component unmounts or state changes
+        };
+    }, [playerPosition, enemyPosition]);
+
     return (
         <div
             className="player"

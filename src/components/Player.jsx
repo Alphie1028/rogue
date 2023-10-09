@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory}) {
+function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,enemyPosition,setPlayerHealth}) {
     const WIDTH = 20;  // width in player units
     const HEIGHT = 20;  // height in player units
 
@@ -41,6 +41,11 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory})
                 setInventory(prevInventory => [...prevInventory, "key"]);
                 setKeyPosition({ x: -1, y: -1 });
             }
+        }
+
+        if (newX === enemyPosition.x && newY === enemyPosition.y) {
+            // Player collides with the enemy
+            setPlayerHealth(prevHealth => prevHealth - 100); // Deducting 100 hit points for simplicity
         }
     };
 

@@ -76,3 +76,10 @@ html {
   font-size: 1.5rem;
   margin: 0 5px;
 }
+
+.enemy {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: red;
+}

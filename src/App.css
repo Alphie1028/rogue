@@ -71,3 +71,8 @@ html {
   border: 1px solid #ddd;
   background-color: #fff;
 }
+
+.heart {
+  font-size: 1.5rem;
+  margin: 0 5px;
+}

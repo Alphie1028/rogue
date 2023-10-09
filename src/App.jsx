@@ -4,6 +4,7 @@ import Player from './components/Player';
 import Wall from './components/Wall';
 import Key from './components/Key';
 import Inventory from './components/Inventory';
+import Hearts from './components/Hearts';
 import { generateMapWithSpawnAndKey } from './components/mapGenerator';
 
 function App() {
@@ -13,9 +14,11 @@ function App() {
   const [spawnPoint, setSpawnPoint] = useState(initialState.spawnPoint);
   const [keyPosition, setKeyPosition] = useState(initialState.keyPoint);
   const [inventory, setInventory] = useState([]);
+  const [playerHealth, setPlayerHealth] = useState(300);
 
   return (
     <div className="appContainer">
+      <Hearts playerHealth={playerHealth} />
       <Inventory items={inventory} />
       <div className="gameContainer">
         <Player walls={walls} spawn={spawnPoint} keyPosition={keyPosition} setKeyPosition={setKeyPosition} inventory={inventory} setInventory={setInventory}></Player>

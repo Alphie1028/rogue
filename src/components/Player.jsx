@@ -107,7 +107,10 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,e
                 setPlayerHealth(prevHealth => prevHealth - 100);
             }
         };
-        const intervalId = setInterval(checkForEnemyContact, 1000); // Check every 10 seconds
+
+        checkForEnemyContact();  // Call immediately
+
+        const intervalId = setInterval(checkForEnemyContact, 1000); // Check every 10 seconds after that
 
         return () => {
             clearInterval(intervalId); // Clear the interval when component unmounts or state changes

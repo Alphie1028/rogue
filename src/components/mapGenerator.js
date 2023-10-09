@@ -85,7 +85,11 @@ export function generateMapWithSpawnAndKey() {
     do {
         const enemyRandomIndex = Math.floor(Math.random() * openSpaces.length);
         enemyPoint = openSpaces[enemyRandomIndex];
-    } while (Math.abs(enemyPoint.x - spawnPoint.x) <= 4 && Math.abs(enemyPoint.y - spawnPoint.y) <= 4 || Math.abs(enemyPoint.x - keyPoint.x) <= 4 && Math.abs(enemyPoint.y - keyPoint.y) <= 4) // Ensure the enemy isn't too close to the player and key
+    } while (
+        (Math.abs(enemyPoint.x - spawnPoint.x) <= 3 && Math.abs(enemyPoint.y - spawnPoint.y) <= 3) ||
+        (Math.abs(enemyPoint.x - keyPoint.x) <= 3 && Math.abs(enemyPoint.y - keyPoint.y) <= 3)
+    );
+
 
     return { map: mapArray, spawnPoint, keyPoint, enemyPoint };
 }

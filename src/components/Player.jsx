@@ -9,37 +9,39 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,e
 
     const [playerPosition, setPlayerPosition] = useState(spawn || { x: centerX, y: centerY }); // Use spawn as initial position if provided
     
-
     const handleKeyPress = (e) => {
         let newX = playerPosition.x;
         let newY = playerPosition.y;
 
-            switch (e.key) {
-                case 'w':
-                    newY = Math.max(0, newY - 1);
-                    break;
-                case 's':
-                    newY = Math.min(HEIGHT - 1, newY + 1);
-                    break;
-                case 'a':
-                    newX = Math.max(0, newX - 1);
-                    break;
-                case 'd':
-                    newX = Math.min(WIDTH - 1, newX + 1);
-                    break;
-                default:
-                    break;
-            }
+        switch (e.key) {
+            case 'w':
+                newY = Math.max(0, newY - 1);
+                break;
+            case 's':
+                newY = Math.min(HEIGHT - 1, newY + 1);
+                break;
+            case 'a':
+                newX = Math.max(0, newX - 1);
+                break;
+            case 'd':
+                newX = Math.min(WIDTH - 1, newX + 1);
+                break;
+            default:
+                break;
+        }
 
+        // Determine enemy's potential move based on where the player plans to go
+        const newEnemyPosition = determineEnemyMove(enemyPosition, { x: newX, y: newY }, walls);
+
+        // Check for potential collisions for the player
         const hitsWall = walls && walls.some(wall => wall.x === newX && wall.y === newY);
-        const hitsEnemy = enemyPosition.x === newX && enemyPosition.y === newY;
-        const newEnemyPosition = determineEnemyMove(enemyPosition, playerPosition, walls);
-        setEnemyPosition(newEnemyPosition);
+        const hitsEnemy = newEnemyPosition.x === newX && newEnemyPosition.y === newY;
 
         if (!hitsWall && !hitsEnemy) {
             setPlayerPosition({ x: newX, y: newY });
+            setEnemyPosition(newEnemyPosition);
 
-            // If the player is on top of the key, add the key to the inventory and remove the key from the board
+            // If the player moves on top of the key, add the key to the inventory and remove the key from the board
             if (newX === keyPosition.x && newY === keyPosition.y) {
                 setInventory(prevInventory => [...prevInventory, "key"]);
                 setKeyPosition({ x: -1, y: -1 });
@@ -78,6 +80,9 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,e
 
         if (isBlocked(newEnemyPos, walls)) {
             return enemyPos;  // Return original position if both directions are blocked
+        }
+        if (newEnemyPos.x === playerPos.x && newEnemyPos.y === playerPos.y) {
+            return enemyPos; // Stay in the current position if moving would overlap the player
         }
         return newEnemyPos;
     };

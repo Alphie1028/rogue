@@ -32,8 +32,9 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,e
             }
 
         const hitsWall = walls && walls.some(wall => wall.x === newX && wall.y === newY);
+        const hitsEnemy = enemyPosition.x === newX && enemyPosition.y === newY;
 
-        if (!hitsWall) {
+        if (!hitsWall && !hitsEnemy) {
             setPlayerPosition({ x: newX, y: newY });
 
             // If the player is on top of the key, add the key to the inventory and remove the key from the board
@@ -41,11 +42,14 @@ function Player({walls,spawn,keyPosition,setKeyPosition,inventory,setInventory,e
                 setInventory(prevInventory => [...prevInventory, "key"]);
                 setKeyPosition({ x: -1, y: -1 });
             }
-        }
 
-        if (newX === enemyPosition.x && newY === enemyPosition.y) {
-            // Player collides with the enemy
-            setPlayerHealth(prevHealth => prevHealth - 100); // Deducting 100 hit points for simplicity
+            // Check for adjacent enemy position
+            if (
+                (newX === enemyPosition.x && Math.abs(newY - enemyPosition.y) === 1) ||
+                (newY === enemyPosition.y && Math.abs(newX - enemyPosition.x) === 1)
+            ) {
+                setPlayerHealth(prevHealth => prevHealth - 100);
+            }
         }
     };
 

@@ -8,6 +8,10 @@ function Player({ walls, spawn, keyPosition, setKeyPosition, inventory, setInven
     const centerY = Math.floor(HEIGHT / 2);
 
     const [playerPosition, setPlayerPosition] = useState(spawn || { x: centerX, y: centerY }); // Use spawn as initial position if provided
+
+    useEffect(() => {
+        setPlayerPosition(spawn);
+    }, [spawn]);
     
     const handleKeyPress = (e) => {
         let newX = playerPosition.x;

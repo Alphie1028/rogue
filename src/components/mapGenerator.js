@@ -55,11 +55,11 @@ export function generateMap() {
         }
     }
 
-    return mapArray;
+    return {mapArray, rooms};
 }
 
 export function generateMapWithSpawnAndKey() {
-    const mapArray = generateMap();
+    const { mapArray, rooms } = generateMap();
 
     // Filter for open spaces on the board
     const openSpaces = [];
@@ -71,15 +71,19 @@ export function generateMapWithSpawnAndKey() {
         }
     }
 
-    // Randomly select a spawn point from the open spaces
-    const randomIndex = Math.floor(Math.random() * openSpaces.length);
-    const spawnPoint = openSpaces[randomIndex];
+    const spawnRandomIndex = Math.floor(Math.random() * openSpaces.length);
+    let spawnPoint = openSpaces[spawnRandomIndex];
 
-    let keyPoint;
-    do {
-        const keyRandomIndex = Math.floor(Math.random() * openSpaces.length);
-        keyPoint = openSpaces[keyRandomIndex];
-    } while (Math.abs(keyPoint.x - spawnPoint.x) <= 3 && Math.abs(keyPoint.y - spawnPoint.y) <= 3) // Ensure the key isn't too close to the player
+    const getKeyPosition = (spawn) => {
+        let keyPoint;
+        do {
+            const keyRandomIndex = Math.floor(Math.random() * openSpaces.length);
+            keyPoint = openSpaces[keyRandomIndex];
+        } while (Math.abs(keyPoint.x - spawn.x) <= 3 && Math.abs(keyPoint.y - spawn.y) <= 3);
+        return keyPoint;
+    }
+
+    let keyPoint = getKeyPosition(spawnPoint);
 
     let enemyPoint;
     do {
@@ -89,16 +93,28 @@ export function generateMapWithSpawnAndKey() {
         (Math.abs(enemyPoint.x - spawnPoint.x) <= 3 && Math.abs(enemyPoint.y - spawnPoint.y) <= 3) ||
         (Math.abs(enemyPoint.x - keyPoint.x) <= 3 && Math.abs(enemyPoint.y - keyPoint.y) <= 3)
     );
-    
-    let portalPoint;
-    do {
-        const portalRandomIndex = Math.floor(Math.random() * openSpaces.length);
-        portalPoint = openSpaces[portalRandomIndex];
-    } while (
-        (Math.abs(portalPoint.x - spawnPoint.x) <= 3 && Math.abs(portalPoint.y - spawnPoint.y) <= 3) ||
-        (Math.abs(portalPoint.x - keyPoint.x) <= 3 && Math.abs(portalPoint.y - keyPoint.y) <= 3) ||
-        (Math.abs(portalPoint.x - enemyPoint.x) <= 3 && Math.abs(portalPoint.y - enemyPoint.y) <= 3)
-    );
 
+    
+    const isTooClose = (point1, point2, distance) => {
+        return (Math.abs(point1.x - point2.x) <= distance && Math.abs(point1.y - point2.y) <= distance);
+    };
+
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // swap
+        }
+        return array;
+    };
+
+    let shuffledSpaces = shuffleArray([...openSpaces]);
+
+    let portalPoint;
+    for (let space of shuffledSpaces) {
+        if (!isTooClose(space, spawnPoint, 3) && !isTooClose(space, keyPoint, 3) && !isTooClose(space, enemyPoint, 3)) {
+            portalPoint = space;
+            break;
+        }
+    }
     return { map: mapArray, spawnPoint, keyPoint, enemyPoint, portalPoint };
 }
